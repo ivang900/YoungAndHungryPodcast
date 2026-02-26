@@ -1,0 +1,47 @@
+Branch: design/v1-dark-cinematic
+Direction: Go dark and cinematic — deep blacks, sharp contrast, dramatic typography, feels like a premium Netflix title card
+
+Color Palette:
+- Background Primary: #000000 / #060606 (pure black, rich black) — the deepest possible base for cinematic contrast
+- Surface: #0C0C0C / #111111 / #181818 — layered dark surfaces for cards and elevated elements
+- Primary Accent: #E63946 (cinematic red) — a warm crimson that's bold without being a direct Netflix copy
+- Secondary Accent: #C9A227 (gold) — used sparingly for premium touches, the "TBD" headline, and icon highlights
+- Text Primary: #FFFFFF — pure white for headlines, maximum contrast on black
+- Text Secondary: #B3B3B3 — for body copy, readable but softer than white
+- Text Muted: #666666 — for labels, metadata, less important text
+- Borders: rgba(255,255,255,0.06) — barely-there borders that define surfaces without breaking the darkness
+- Accent Glow: rgba(230,57,70,0.35) — used for button glow effects and focus states
+
+Typography:
+- Headline: Bebas Neue — a tall, condensed uppercase typeface that screams cinema. It's what you'd see on a movie poster or title card. The extreme vertical proportions create drama at any size, and the uppercase-only design enforces a commanding presence. Paired with generous letter-spacing, it reads as premium editorial.
+- Body: DM Sans — a geometric sans-serif with optical sizing that adapts from 9pt to 40pt. It has more character than system fonts, with slightly quirky geometry in the lowercase 'a' and 'g'. Excellent readability at body sizes, clean at small labels, and pairs naturally with Bebas Neue's geometry.
+
+Layout & Structure Decisions:
+- Full viewport hero with no background image — the typography IS the visual, supported by subtle radial gradients and scan line effects
+- Asymmetric card layout in CompactInfo: the middle card is offset downward by 2rem, breaking the rigid grid and creating visual rhythm
+- Episode numbers (EP 01, EP 02, etc.) added as typographic accents above titles in the accordion, adding structure without new content
+- Generous spacing (6rem section padding) gives each section room to breathe, like chapters in a film
+- Section transitions use subtle gradient fades and thin centered divider lines instead of hard edges
+
+Animations & Effects:
+- Title reveal: letters animate from blurred and widely spaced to sharp and tight, mimicking a cinematic title card appearing on screen
+- Scroll-triggered fade-up: each section's content animates upward on scroll using IntersectionObserver, with staggered delays per element
+- Button pulse glow: the CTA button has a breathing red glow animation that draws the eye without being distracting
+- Film grain overlay: a subtle SVG noise texture animates across the hero, adding analog texture to the digital surface
+- Vignette: the hero has a dark radial vignette that darkens the edges like a cinema screen
+- Horizontal scan lines: extremely subtle (3% opacity) horizontal lines across the hero evoke CRT/broadcast aesthetics
+- Input focus glow: form inputs emit a soft red glow on focus, making interaction feel intentional
+- Smooth accordion: topic cards expand/collapse with cubic-bezier easing for fluid motion
+- Card hover: cards lift slightly and emit a subtle glow matching their accent color
+
+What makes this version unique:
+- It feels like tuning into a premium streaming service. The full-black backgrounds with the cinematic title reveal in Bebas Neue create an immediate sense of prestige. The combination of film grain, scan lines, and vignetting adds analog warmth to a digital interface. When someone describes this site, they'd say "it looked like a Netflix title card for a podcast" — which is exactly the brief.
+
+What was intentionally avoided:
+- No blue/white/purple corporate palette — the previous design's entire color identity was replaced
+- No gradient cards or glassmorphism — these read as "AI-generated 2024 template"
+- No Inter, Roboto, or system font stacks — Bebas Neue + DM Sans is a deliberate pairing, not a default
+- No background images or hero photos — the typography and effects ARE the visual, keeping it lightweight
+- No rounded-xl pill shapes everywhere — sharp corners (0.375rem radius) reinforce the cinematic precision
+- No rainbow gradient accents or neon glows — the palette is strictly black, white, red, and gold
+- No generic hover effects — every interaction (glow, lift, color shift) is tuned to the cinematic theme

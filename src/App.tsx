@@ -7,7 +7,7 @@ import { Footer } from './components/Footer';
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ background: 'var(--cin-black)' }}>
       <Hero />
       <TopicAccordion />
       <CompactInfo />
