@@ -3,3 +3,8 @@ dist
 .env
 .env.local
 .env.*.local
+CLAUDE.md
+package-lock.json
+.idea
+.claude
+
