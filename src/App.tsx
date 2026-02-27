@@ -15,7 +15,7 @@ export default function App() {
   });
 
   return (
-    <div className="min-h-screen film-grain" style={{ background: 'var(--c-void)' }}>
+    <div className="min-h-screen" style={{ background: '#0A0000' }}>
       {/* Scroll progress bar */}
       <motion.div
         className="scroll-progress"

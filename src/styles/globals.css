@@ -7,14 +7,14 @@
   --font-heading: 'Bebas Neue', Impact, sans-serif;
   --font-body: 'DM Sans Variable', 'DM Sans', system-ui, sans-serif;
 
-  /* === CINEMATIC PALETTE === */
-  --c-void: #000000;
-  --c-black: #050505;
-  --c-surface-0: #0A0A0A;
-  --c-surface-1: #0F0F0F;
-  --c-surface-2: #151515;
-  --c-surface-3: #1C1C1C;
-  --c-surface-4: #242424;
+  /* === VOLCANIC PALETTE === */
+  --c-void: #0A0000;
+  --c-black: #0D0202;
+  --c-surface-0: #120404;
+  --c-surface-1: #180606;
+  --c-surface-2: #1E0808;
+  --c-surface-3: #250A0A;
+  --c-surface-4: #2D0C0C;
 
   --c-red: #E63946;
   --c-red-hot: #FF2D3B;
@@ -22,16 +22,22 @@
   --c-red-glow: rgba(230, 57, 70, 0.4);
   --c-red-ghost: rgba(230, 57, 70, 0.06);
 
+  --c-lava: #E85A1B;
+  --c-lava-bright: #FF6B2B;
+  --c-lava-deep: #C44012;
+  --c-ember: #FF8C42;
+  --c-molten: #FFB347;
+
   --c-gold: #C9A227;
   --c-gold-light: #E0B830;
 
   --c-white: #FFFFFF;
-  --c-text: #F0F0F0;
-  --c-text-dim: #A0A0A0;
-  --c-text-ghost: #555555;
+  --c-text: #F0E8E4;
+  --c-text-dim: #B09890;
+  --c-text-ghost: #6B5550;
 
-  --c-line: rgba(255,255,255,0.06);
-  --c-line-hover: rgba(255,255,255,0.14);
+  --c-line: rgba(255,180,140,0.06);
+  --c-line-hover: rgba(255,180,140,0.14);
   --c-line-red: rgba(230, 57, 70, 0.2);
 
   /* shadcn compat */
@@ -94,8 +100,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    background: var(--c-void);
-    color: var(--c-text);
+    background: #0A0000;
+    color: #F0E8E4;
     font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -105,8 +111,8 @@
 
 html {
   font-size: var(--font-size);
-  scroll-behavior: auto; /* framer handles smooth scroll */
-  background: #000;
+  scroll-behavior: auto;
+  background: #0A0000;
 }
 
 /* ===== TYPOGRAPHY ===== */
@@ -133,18 +139,45 @@ html {
   90% { transform: translate(-10%, 10%); }
 }
 
-.film-grain::after {
-  content: '';
-  position: fixed;
-  inset: -200%;
-  width: 400%;
-  height: 400%;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
-  animation: grainDrift 6s steps(8) infinite;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.3;
-  mix-blend-mode: overlay;
+/* film-grain disabled — was washing out dark backgrounds */
+
+/* ===== LAVA ANIMATIONS ===== */
+
+@keyframes lavaFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes lavaWave {
+  0%, 100% { d: path('M0,20 Q60,5 120,20 T240,20 T360,20 T480,20 L480,60 L0,60 Z'); }
+  25% { d: path('M0,18 Q60,28 120,15 T240,22 T360,18 T480,22 L480,60 L0,60 Z'); }
+  50% { d: path('M0,22 Q60,12 120,25 T240,18 T360,24 T480,18 L480,60 L0,60 Z'); }
+  75% { d: path('M0,16 Q60,24 120,18 T240,24 T360,16 T480,20 L480,60 L0,60 Z'); }
+}
+
+@keyframes bubbleRise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-40px) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes lavaPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes heatShimmer {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-2px) scaleY(1.02); }
 }
 
 /* ===== SCROLL PROGRESS ===== */
@@ -154,7 +187,7 @@ html {
   top: 0;
   left: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--c-red), var(--c-red-hot), var(--c-gold));
+  background: linear-gradient(90deg, #E63946, #FF6B2B, #FFB347);
   z-index: 10000;
   transform-origin: left;
 }
@@ -167,7 +200,7 @@ html {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  background: var(--c-red);
+  background: #E63946;
   color: #fff;
   font-family: var(--font-body);
   font-weight: 600;
@@ -197,16 +230,16 @@ html {
 /* ===== SELECTION ===== */
 
 ::selection {
-  background: var(--c-red);
+  background: #E63946;
   color: white;
 }
 
 /* ===== SCROLLBAR ===== */
 
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #000; }
-::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: var(--c-red-deep); }
+::-webkit-scrollbar-track { background: #0A0000; }
+::-webkit-scrollbar-thumb { background: #2D0C0C; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #E63946; }
 
 /* ===== RESPONSIVE HELPERS ===== */
 
