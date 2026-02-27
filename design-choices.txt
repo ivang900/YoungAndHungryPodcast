@@ -2,46 +2,52 @@ Branch: design/v1-dark-cinematic
 Direction: Go dark and cinematic — deep blacks, sharp contrast, dramatic typography, feels like a premium Netflix title card
 
 Color Palette:
-- Background Primary: #000000 / #060606 (pure black, rich black) — the deepest possible base for cinematic contrast
-- Surface: #0C0C0C / #111111 / #181818 — layered dark surfaces for cards and elevated elements
-- Primary Accent: #E63946 (cinematic red) — a warm crimson that's bold without being a direct Netflix copy
-- Secondary Accent: #C9A227 (gold) — used sparingly for premium touches, the "TBD" headline, and icon highlights
-- Text Primary: #FFFFFF — pure white for headlines, maximum contrast on black
-- Text Secondary: #B3B3B3 — for body copy, readable but softer than white
-- Text Muted: #666666 — for labels, metadata, less important text
-- Borders: rgba(255,255,255,0.06) — barely-there borders that define surfaces without breaking the darkness
-- Accent Glow: rgba(230,57,70,0.35) — used for button glow effects and focus states
+- Void Black (#000000) — true black page background, creates maximum contrast
+- Rich Black (#050505) — section backgrounds with just enough lift to separate from void
+- Surface layers (#0A0A0A → #0F0F0F → #151515 → #1C1C1C) — a 4-tier elevation system for cards, modals, and raised elements
+- Cinematic Red (#E63946) — primary accent, a warm crimson with more personality than Netflix red
+- Hot Red (#FF2D3B) — hover/active state escalation of the primary
+- Deep Red (#B91C2C) — used in shadows and glow effects for depth
+- Gold (#C9A227) — secondary accent for premium touches: the "TBD" text, success states, select ember particles
+- Pure White (#FFFFFF) — headlines only, for maximum impact
+- Dim Text (#A0A0A0) — body copy, readable but doesn't compete with headlines
+- Ghost Text (#555555) — metadata, labels, tertiary information
 
 Typography:
-- Headline: Bebas Neue — a tall, condensed uppercase typeface that screams cinema. It's what you'd see on a movie poster or title card. The extreme vertical proportions create drama at any size, and the uppercase-only design enforces a commanding presence. Paired with generous letter-spacing, it reads as premium editorial.
-- Body: DM Sans — a geometric sans-serif with optical sizing that adapts from 9pt to 40pt. It has more character than system fonts, with slightly quirky geometry in the lowercase 'a' and 'g'. Excellent readability at body sizes, clean at small labels, and pairs naturally with Bebas Neue's geometry.
+- Headline: Bebas Neue (self-hosted via @fontsource) — a tall condensed uppercase typeface that IS cinema. Every movie poster, every title card, every premium streaming service uses this geometry. The extreme vertical proportions mean headlines can be set at 8-9rem and still feel controlled. Paired with 0.04em letter-spacing for breathing room.
+- Body: DM Sans Variable (self-hosted via @fontsource) — optical sizing from 9pt to 40pt adapts weight distribution automatically. More personality than Inter or system fonts — the lowercase 'a' and 'g' have distinctive geometry. The variable font means a single file serves all weights (400-700).
 
 Layout & Structure Decisions:
-- Full viewport hero with no background image — the typography IS the visual, supported by subtle radial gradients and scan line effects
-- Asymmetric card layout in CompactInfo: the middle card is offset downward by 2rem, breaking the rigid grid and creating visual rhythm
-- Episode numbers (EP 01, EP 02, etc.) added as typographic accents above titles in the accordion, adding structure without new content
-- Generous spacing (6rem section padding) gives each section room to breathe, like chapters in a film
-- Section transitions use subtle gradient fades and thin centered divider lines instead of hard edges
+- Full viewport hero (100vh) — the title IS the page. No background image needed.
+- Asymmetric card grid in CompactInfo — middle card offset 2.5rem downward, breaking the grid intentionally
+- Episode cards alternate entrance direction (left/right) on scroll for visual rhythm
+- 7rem section padding creates cinematic breathing room between acts
+- Thin gradient divider lines between sections instead of hard borders
+- Max-width containers (5xl for content, 6xl for grids) prevent the dark space from feeling empty
 
-Animations & Effects:
-- Title reveal: letters animate from blurred and widely spaced to sharp and tight, mimicking a cinematic title card appearing on screen
-- Scroll-triggered fade-up: each section's content animates upward on scroll using IntersectionObserver, with staggered delays per element
-- Button pulse glow: the CTA button has a breathing red glow animation that draws the eye without being distracting
-- Film grain overlay: a subtle SVG noise texture animates across the hero, adding analog texture to the digital surface
-- Vignette: the hero has a dark radial vignette that darkens the edges like a cinema screen
-- Horizontal scan lines: extremely subtle (3% opacity) horizontal lines across the hero evoke CRT/broadcast aesthetics
-- Input focus glow: form inputs emit a soft red glow on focus, making interaction feel intentional
-- Smooth accordion: topic cards expand/collapse with cubic-bezier easing for fluid motion
-- Card hover: cards lift slightly and emit a subtle glow matching their accent color
+Animations & Effects (powered by Framer Motion):
+- HERO ENTRANCE SEQUENCE: Orchestrated stagger — badge fades up → title reveals from blurred/wide-spaced to sharp/tight (1.6s) → accent line expands from center → subtitle fades up → CTA scales in with breathing glow. Total sequence: ~2.5s.
+- PARALLAX: Title and subtitle move at different speeds on scroll (titleY: 120px, subtitleY: 60px), background scales to 1.15x. Creates cinematic depth.
+- FLOATING EMBERS: 18 particles (mix of red and gold) rise continuously from the bottom of the hero. Each has randomized size, position, speed, and delay. Gold embers appear ~30% of the time for variety.
+- SCAN LINES: 100 horizontal lines at 2.5% opacity create a CRT/broadcast texture across the hero.
+- FILM GRAIN: SVG fractal noise texture animates in 8 steps across the entire page. Fixed position so it persists through scroll.
+- SCROLL PROGRESS BAR: A red-to-gold gradient bar at the very top of the viewport tracks scroll position with spring physics.
+- TOPIC CARDS: Each card slides in from alternating left/right with blur clearing. Chevron rotates 180 degrees with spring. Expanded content uses Framer Motion height auto-animation.
+- COMPACT INFO CARDS: Enter with rotateX (3D tilt) that resolves to flat. Icons pulse-scale on hover. Parallax diagonal texture moves behind cards.
+- SIGNUP GLOW: A radial red gradient behind the section scales and intensifies as you scroll into view (useScroll + useTransform).
+- BUTTON CHOREOGRAPHY: Shine sweep on hover (CSS ::before translateX), Framer Motion scale + shadow on hover/tap. CTA breathes with animated boxShadow.
+- CLOSE BUTTON: Rotates 90 degrees on hover.
+- SUCCESS STATE: CheckCircle icon does a full 360 degree rotation on subscribe, spring physics.
+- FOOTER: Staggered reveal of all four columns. Social icons lift 3px on hover. Links slide 4px right on hover.
 
 What makes this version unique:
-- It feels like tuning into a premium streaming service. The full-black backgrounds with the cinematic title reveal in Bebas Neue create an immediate sense of prestige. The combination of film grain, scan lines, and vignetting adds analog warmth to a digital interface. When someone describes this site, they'd say "it looked like a Netflix title card for a podcast" — which is exactly the brief.
+- The entrance sequence is what people will remember. You load the page and it feels like a movie is starting — the title materializes from blur, embers drift upward, the CTA pulses with light. It's not a website loading, it's a curtain rising. The scroll progress bar and parallax reinforce that you're moving through a cinematic experience, not scrolling a webpage. The combination of film grain, scan lines, and embers creates atmosphere that pure CSS alone cannot achieve.
 
 What was intentionally avoided:
-- No blue/white/purple corporate palette — the previous design's entire color identity was replaced
-- No gradient cards or glassmorphism — these read as "AI-generated 2024 template"
-- No Inter, Roboto, or system font stacks — Bebas Neue + DM Sans is a deliberate pairing, not a default
-- No background images or hero photos — the typography and effects ARE the visual, keeping it lightweight
-- No rounded-xl pill shapes everywhere — sharp corners (0.375rem radius) reinforce the cinematic precision
-- No rainbow gradient accents or neon glows — the palette is strictly black, white, red, and gold
-- No generic hover effects — every interaction (glow, lift, color shift) is tuned to the cinematic theme
+- No background images at all — zero external image requests. All visual interest is CSS + SVG + Framer Motion.
+- No Inter, Roboto, Space Grotesk, or system fonts — Bebas Neue + DM Sans Variable is a deliberate, self-hosted pairing.
+- No purple gradients, no blue/white corporate palette, no SaaS aesthetic.
+- No rounded-xl pill shapes — sharp corners (0.375rem) reinforce cinematic precision.
+- No scattered micro-interactions — all motion is orchestrated into sequences with intentional timing.
+- No generic card layouts — asymmetric offsets, alternating entrance directions, and elevation tiers create hierarchy.
+- No heavy libraries beyond Framer Motion — no GSAP, no Three.js, no particle engines. The embers are just 18 divs.

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Mic2, Twitter, Linkedin, Youtube, Mail } from 'lucide-react';
 
 const socialLinks = [
@@ -8,174 +9,218 @@ const socialLinks = [
   { icon: Mail, label: 'Email' },
 ];
 
+const quickLinks = ['Link One', 'Link Two', 'Link Three', 'Link Four'];
+const resourceLinks = ['Link One', 'Link Two', 'Link Three', 'Link Four'];
+
 export function Footer() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+
+  const stagger = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.06, delayChildren: 0.2 } },
+  };
+  const fadeUp = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+  };
+
   return (
     <footer
+      ref={ref}
       className="relative"
       role="contentinfo"
       style={{
-        background: 'var(--cin-black)',
-        borderTop: '1px solid var(--cin-border)',
-        paddingTop: '3rem',
+        background: '#000000',
+        borderTop: '1px solid rgba(255,255,255,0.06)',
+        paddingTop: '3.5rem',
         paddingBottom: '2rem',
       }}
     >
-      <div className="max-w-6xl mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-4">
-              <div
-                className="w-10 h-10 rounded flex items-center justify-center"
+      {/* Red glow at top of footer */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
+        style={{
+          width: '30%',
+          height: '80px',
+          background: 'radial-gradient(ellipse at top, rgba(230,57,70,0.06) 0%, transparent 70%)',
+        }}
+      />
+
+      <motion.div
+        className="max-w-6xl mx-auto px-6"
+        variants={stagger}
+        initial="hidden"
+        animate={inView ? 'show' : 'hidden'}
+      >
+        <div className="grid md:grid-cols-4 gap-10 mb-10">
+          {/* Brand column */}
+          <motion.div variants={fadeUp} className="md:col-span-2">
+            <div className="flex items-center gap-3 mb-5">
+              <motion.div
+                className="w-10 h-10 rounded-sm flex items-center justify-center"
                 style={{
-                  background: 'var(--cin-red)',
-                  boxShadow: '0 4px 20px rgba(230, 57, 70, 0.25)',
+                  background: '#E63946',
+                }}
+                whileHover={{
+                  boxShadow: '0 0 30px rgba(230,57,70,0.4)',
+                  scale: 1.08,
                 }}
               >
                 <Mic2 className="w-5 h-5 text-white" aria-hidden="true" />
-              </div>
+              </motion.div>
               <span
                 className="font-heading"
                 style={{
-                  fontSize: '1.4rem',
-                  color: 'var(--cin-text)',
-                  letterSpacing: '0.05em',
+                  fontSize: '1.5rem',
+                  color: '#FFFFFF',
+                  letterSpacing: '0.06em',
                 }}
               >
                 Brand Name
               </span>
             </div>
-            <p className="mb-6" style={{ color: 'var(--cin-text-muted)', fontFamily: 'var(--font-body)', fontSize: '0.875rem', lineHeight: 1.6, maxWidth: '300px' }}>
+            <p
+              style={{
+                color: '#555555',
+                fontFamily: 'var(--font-body)',
+                fontSize: '0.875rem',
+                lineHeight: 1.7,
+                maxWidth: '280px',
+                marginBottom: '1.5rem',
+              }}
+            >
               Brief description or tagline for your brand goes here.
             </p>
+
+            {/* Social icons */}
             <div className="flex gap-2" role="navigation" aria-label="Social media links">
               {socialLinks.map(({ icon: Icon, label }) => (
-                <a
+                <motion.a
                   key={label}
                   href="#"
-                  className="w-10 h-10 rounded flex items-center justify-center transition-all duration-300"
                   aria-label={label}
+                  className="w-10 h-10 rounded-sm flex items-center justify-center"
                   style={{
-                    background: 'var(--cin-surface)',
-                    border: '1px solid var(--cin-border)',
-                    color: 'var(--cin-text-muted)',
+                    background: '#0F0F0F',
+                    border: '1px solid rgba(255,255,255,0.06)',
+                    color: '#555555',
                   }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--cin-red)';
-                    e.currentTarget.style.color = 'var(--cin-red)';
-                    e.currentTarget.style.background = 'var(--cin-red-subtle)';
-                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(230, 57, 70, 0.15)';
+                  variants={fadeUp}
+                  whileHover={{
+                    borderColor: '#E63946',
+                    color: '#E63946',
+                    background: 'rgba(230,57,70,0.06)',
+                    boxShadow: '0 4px 25px rgba(230,57,70,0.15)',
+                    y: -3,
                   }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'var(--cin-border)';
-                    e.currentTarget.style.color = 'var(--cin-text-muted)';
-                    e.currentTarget.style.background = 'var(--cin-surface)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
+                  transition={{ duration: 0.3 }}
                 >
                   <Icon className="w-4 h-4" aria-hidden="true" />
-                </a>
+                </motion.a>
               ))}
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <nav aria-label="Footer navigation">
+          <motion.nav variants={fadeUp} aria-label="Footer navigation">
             <h3
-              className="font-heading mb-4"
+              className="font-heading mb-5"
               style={{
-                color: 'var(--cin-text)',
+                color: '#FFFFFF',
                 fontSize: '1rem',
-                letterSpacing: '0.1em',
+                letterSpacing: '0.12em',
               }}
             >
               Quick Links
             </h3>
             <ul className="space-y-3">
-              {['Link One', 'Link Two', 'Link Three', 'Link Four'].map((link) => (
+              {quickLinks.map((link) => (
                 <li key={link}>
-                  <a
+                  <motion.a
                     href="#"
-                    className="transition-colors duration-300 accent-line-hover inline-block pb-0.5"
+                    className="inline-block relative"
                     style={{
-                      color: 'var(--cin-text-muted)',
+                      color: '#555555',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.875rem',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cin-red)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cin-text-muted)')}
+                    whileHover={{ color: '#E63946', x: 4 }}
+                    transition={{ duration: 0.25 }}
                   >
                     {link}
-                  </a>
+                  </motion.a>
                 </li>
               ))}
             </ul>
-          </nav>
+          </motion.nav>
 
           {/* Resources */}
-          <nav aria-label="Resources navigation">
+          <motion.nav variants={fadeUp} aria-label="Resources navigation">
             <h3
-              className="font-heading mb-4"
+              className="font-heading mb-5"
               style={{
-                color: 'var(--cin-text)',
+                color: '#FFFFFF',
                 fontSize: '1rem',
-                letterSpacing: '0.1em',
+                letterSpacing: '0.12em',
               }}
             >
               Resources
             </h3>
             <ul className="space-y-3">
-              {['Link One', 'Link Two', 'Link Three', 'Link Four'].map((link, i) => (
+              {resourceLinks.map((link, i) => (
                 <li key={`res-${i}`}>
-                  <a
+                  <motion.a
                     href="#"
-                    className="transition-colors duration-300 accent-line-hover inline-block pb-0.5"
+                    className="inline-block relative"
                     style={{
-                      color: 'var(--cin-text-muted)',
+                      color: '#555555',
                       fontFamily: 'var(--font-body)',
                       fontSize: '0.875rem',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cin-red)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cin-text-muted)')}
+                    whileHover={{ color: '#E63946', x: 4 }}
+                    transition={{ duration: 0.25 }}
                   >
                     {link}
-                  </a>
+                  </motion.a>
                 </li>
               ))}
             </ul>
-          </nav>
+          </motion.nav>
         </div>
 
         {/* Bottom bar */}
-        <div
-          className="pt-6 flex flex-col md:flex-row justify-between items-center gap-4"
-          style={{
-            borderTop: '1px solid var(--cin-border)',
-          }}
+        <motion.div
+          variants={fadeUp}
+          className="pt-5 flex flex-col md:flex-row justify-between items-center gap-4"
+          style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <p style={{ color: 'var(--cin-text-muted)', fontFamily: 'var(--font-body)', fontSize: '0.8rem' }}>
+          <p style={{
+            color: '#555555',
+            fontFamily: 'var(--font-body)',
+            fontSize: '0.78rem',
+          }}>
             © 2026 Brand Name. All rights reserved.
           </p>
           <div className="flex gap-6">
             {['Privacy Policy', 'Terms of Service'].map((link) => (
-              <a
+              <motion.a
                 key={link}
                 href="#"
-                className="transition-colors duration-300"
                 style={{
-                  color: 'var(--cin-text-muted)',
+                  color: '#555555',
                   fontFamily: 'var(--font-body)',
-                  fontSize: '0.8rem',
+                  fontSize: '0.78rem',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--cin-red)')}
-                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--cin-text-muted)')}
+                whileHover={{ color: '#E63946' }}
+                transition={{ duration: 0.25 }}
               >
                 {link}
-              </a>
+              </motion.a>
             ))}
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </footer>
   );
 }

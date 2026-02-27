@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Users, Target, BookOpen } from "lucide-react";
 
 const cards = [
@@ -6,171 +7,203 @@ const cards = [
     icon: Target,
     title: "Task One",
     description: "This is where sample example 1 will go",
-    accent: 'var(--cin-red)',
-    accentGlow: 'rgba(230, 57, 70, 0.12)',
+    accent: '#E63946',
+    glowColor: 'rgba(230,57,70,0.08)',
   },
   {
     icon: BookOpen,
     title: "Task Two",
     description: "This is where sample example 2 will go",
-    accent: 'var(--cin-gold)',
-    accentGlow: 'rgba(201, 162, 39, 0.12)',
+    accent: '#C9A227',
+    glowColor: 'rgba(201,162,39,0.08)',
   },
   {
     icon: Users,
     title: "Task Three",
     description: "This is where sample example 3 will go",
-    accent: 'var(--cin-red-bright)',
-    accentGlow: 'rgba(255, 45, 59, 0.12)',
+    accent: '#FF2D3B',
+    glowColor: 'rgba(255,45,59,0.08)',
   },
 ];
 
 export function CompactInfo() {
-  const [visible, setVisible] = useState(false);
-  const ref = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+  const sectionRef = useRef(null);
+  const headerRef = useRef(null);
+  const headerInView = useInView(headerRef, { once: true, margin: '-100px' });
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ['-5%', '5%']);
 
   return (
     <section
-      ref={ref}
+      ref={sectionRef}
       className="relative overflow-hidden"
       aria-labelledby="info-heading"
       style={{
-        background: 'var(--cin-surface)',
-        paddingTop: '6rem',
-        paddingBottom: '6rem',
+        background: '#0A0A0A',
+        paddingTop: '7rem',
+        paddingBottom: '7rem',
       }}
     >
-      {/* Background texture — diagonal lines */}
+      {/* Top divider */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute top-0 left-0 right-0"
         style={{
-          opacity: 0.015,
-          backgroundImage: `repeating-linear-gradient(
-            -45deg,
-            transparent,
-            transparent 40px,
-            rgba(255,255,255,0.5) 40px,
-            rgba(255,255,255,0.5) 41px
-          )`,
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent 10%, rgba(255,255,255,0.14) 50%, transparent 90%)',
         }}
       />
 
-      {/* Red glow from top */}
+      {/* Parallax diagonal line texture */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ y: bgY, opacity: 0.02 }}
+      >
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `repeating-linear-gradient(
+              -45deg,
+              transparent,
+              transparent 50px,
+              rgba(255,255,255,0.4) 50px,
+              rgba(255,255,255,0.4) 51px
+            )`,
+          }}
+        />
+      </motion.div>
+
+      {/* Top-down spotlight */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 pointer-events-none"
         style={{
-          width: '40%',
-          height: '300px',
-          background: 'radial-gradient(ellipse at top center, rgba(230, 57, 70, 0.04) 0%, transparent 70%)',
+          width: '50%',
+          height: '400px',
+          background: 'radial-gradient(ellipse at top center, rgba(201,162,39,0.06) 0%, transparent 70%)',
         }}
       />
 
       <div className="relative max-w-6xl mx-auto px-6">
-        {/* Section header */}
-        <div className="text-center mb-16">
-          <p
-            className={`font-medium mb-4 ${visible ? 'anim-fade-up' : 'opacity-0'}`}
+        {/* Header */}
+        <div ref={headerRef} className="text-center mb-20">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={headerInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
             style={{
-              color: 'var(--cin-gold)',
+              color: '#C9A227',
               fontFamily: 'var(--font-body)',
               textTransform: 'uppercase',
-              letterSpacing: '0.15em',
-              fontSize: '0.75rem',
+              letterSpacing: '0.2em',
+              fontSize: '0.7rem',
+              fontWeight: 600,
+              marginBottom: '1rem',
             }}
           >
             Hands-On Learning
-          </p>
-          <h2
+          </motion.p>
+          <motion.h2
             id="info-heading"
-            className={`font-heading ${visible ? 'anim-fade-up delay-1' : 'opacity-0'}`}
+            className="font-heading"
+            initial={{ opacity: 0, y: 40, filter: 'blur(6px)' }}
+            animate={headerInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-              color: 'var(--cin-text)',
-              lineHeight: 0.95,
+              fontSize: 'clamp(2.8rem, 6vw, 4.5rem)',
+              color: '#FFFFFF',
+              lineHeight: 0.92,
             }}
           >
             Hands On AI Misconception Lab
-          </h2>
+          </motion.h2>
         </div>
 
-        {/* Cards — asymmetric layout on desktop */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {cards.map((card, index) => {
+        {/* Cards — middle one offset for asymmetry */}
+        <div className="grid md:grid-cols-3 gap-5">
+          {cards.map((card, i) => {
             const Icon = card.icon;
-            const offset = index === 1 ? 'md:translate-y-8' : '';
+            const cardRef = useRef(null);
+            const cardInView = useInView(cardRef, { once: true, margin: '-60px' });
+
             return (
-              <div
+              <motion.div
                 key={card.title}
-                className={`relative group rounded-md p-8 transition-all duration-500 ${offset} ${visible ? 'anim-fade-up' : 'opacity-0'}`}
+                ref={cardRef}
+                initial={{
+                  opacity: 0,
+                  y: 60,
+                  rotateX: 8,
+                  filter: 'blur(4px)',
+                }}
+                animate={
+                  cardInView
+                    ? { opacity: 1, y: 0, rotateX: 0, filter: 'blur(0px)' }
+                    : {}
+                }
+                transition={{
+                  duration: 0.8,
+                  delay: i * 0.15,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                whileHover={{
+                  y: i === 1 ? 24 : -8,
+                  borderColor: card.accent,
+                  boxShadow: `0 25px 80px rgba(0,0,0,0.6), 0 0 50px ${card.glowColor}`,
+                  transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+                }}
+                className="relative rounded-sm p-8"
                 style={{
-                  animationDelay: visible ? `${0.2 + index * 0.12}s` : '0s',
-                  background: 'var(--cin-black-rich)',
-                  border: '1px solid var(--cin-border)',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = card.accent;
-                  e.currentTarget.style.boxShadow = `0 20px 60px rgba(0,0,0,0.5), 0 0 40px ${card.accentGlow}`;
-                  e.currentTarget.style.transform = `translateY(${index === 1 ? 'calc(2rem - 6px)' : '-6px'})`;
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--cin-border)';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.style.transform = `translateY(${index === 1 ? '2rem' : '0'})`;
+                  background: '#0F0F0F',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  marginTop: i === 1 ? '2.5rem' : 0,
+                  perspective: '800px',
                 }}
               >
-                {/* Accent top line */}
+                {/* Top accent line */}
                 <div
+                  className="absolute top-0 left-6 right-6"
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: '1.5rem',
-                    right: '1.5rem',
-                    height: '2px',
-                    background: `linear-gradient(90deg, transparent, ${card.accent}, transparent)`,
-                    opacity: 0.5,
-                    borderRadius: '1px',
+                    height: '1px',
+                    background: `linear-gradient(90deg, transparent, ${card.accent}66, transparent)`,
                   }}
                 />
 
-                {/* Icon */}
-                <div
-                  className="w-12 h-12 rounded flex items-center justify-center mb-6"
+                {/* Icon container */}
+                <motion.div
+                  className="w-14 h-14 rounded-sm flex items-center justify-center mb-7"
                   style={{
-                    background: card.accentGlow,
-                    border: `1px solid ${card.accent}33`,
+                    background: card.glowColor,
+                    border: `1px solid ${card.accent}22`,
+                  }}
+                  whileHover={{
+                    scale: 1.1,
+                    boxShadow: `0 0 30px ${card.glowColor}`,
                   }}
                 >
-                  <Icon className="w-5 h-5" aria-hidden="true" style={{ color: card.accent }} />
-                </div>
+                  <Icon className="w-6 h-6" aria-hidden="true" style={{ color: card.accent }} />
+                </motion.div>
 
                 <h3
                   className="font-heading mb-3"
                   style={{
-                    fontSize: '1.5rem',
-                    color: 'var(--cin-text)',
-                    letterSpacing: '0.03em',
+                    fontSize: '1.6rem',
+                    color: '#FFFFFF',
+                    letterSpacing: '0.04em',
                   }}
                 >
                   {card.title}
                 </h3>
-                <p style={{ color: 'var(--cin-text-secondary)', fontFamily: 'var(--font-body)', lineHeight: 1.6, fontSize: '0.95rem' }}>
+                <p style={{
+                  color: '#A0A0A0',
+                  fontFamily: 'var(--font-body)',
+                  lineHeight: 1.7,
+                  fontSize: '0.92rem',
+                }}>
                   {card.description}
                 </p>
-              </div>
+              </motion.div>
             );
           })}
         </div>
